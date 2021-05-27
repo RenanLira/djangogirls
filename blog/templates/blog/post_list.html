@@ -1,0 +1,41 @@
+{% extends 'blog/base.html' %}
+
+{% block button %}
+    {% if user.is_authenticated %}
+        <div class="button">
+            <a href="{% url 'post_new' %}">Adicionar Post</a>
+        </div>
+        <div class="button">
+            <a href="{% url 'post_draft_list' %}">Exibir rascunhos</a>
+        </div> 
+    {% endif %}
+{% endblock %}
+
+
+{% block conteudo %}
+    <section class="posts">
+        {% for post in posts %}
+        <div class="card">
+                <a href="{% url 'post_detail' id=post.id %}">
+                    <div class="title">
+                        <h3>{{ post.title }}</h3>
+                        <p>Comentarios: {{ post.approved_comments.count }}
+                            {% if user.is_authenticated %}
+                                ({{ post.comments.count }})
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="description">
+                        <p>{{ post.text }}</p>
+                    </div>
+                    {%if post.published_date %}
+                        <div class="date">
+                            <p>{{ post.published_date }}</p>
+                        </div>
+                    {% endif %}
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}
+ 

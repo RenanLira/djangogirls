@@ -1,0 +1,68 @@
+{% extends 'blog/base.html' %}
+
+{% block button %}
+    {% if user.is_authenticated and user.id == post.author.id %}
+        <div class="button">
+            <a href="{% url 'post_edit' id=post.id %}">Editar Post</a>
+        </div>
+        <div class="button bk-red">
+            <a href="{% url 'post_remove' id=post.id %}">Deletar Post</a>
+        </div>
+    {% endif %}
+{%endblock%}
+
+{% block conteudo %}
+    <section class="post">
+        <div class="head">
+            <div class="title">
+                <h2>{{ post.title }}</h2>
+            </div>
+            {%if post.published_date %}
+                <div class="date">
+                    {{ post.published_date }}
+                </div>
+            {% else %}
+                <a href="{% url 'post_publish' id=post.id%}" class="button background">Publicar Agora</a>
+            {% endif %}
+        </div>
+        <div class="body">
+            <div class="description">
+                <p>{{ post.text }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="comentarios">
+        <h4>Comentarios:</h4>
+        {% for comment in post.comments.all %}
+            {% if user.is_authenticated or comment.approved_comment %}
+                <div class="comentario">
+                    <div class="title">
+                        <p><strong>{{ comment.author }}, {{ comment.created_date }}</strong></p>
+                    </div>
+                    <div class="text">
+                        <p>{{ comment.text }}</p>
+                    </div>
+                    {% if not comment.approved_comment %}
+                        <div class="aprovar">
+                            <a href="{% url 'comment_approve' id=comment.id%}" class="button">Aprovar</a>
+                            <a href="{% url 'comment_remove' id=comment.id%}" class="button bk-red">Remover</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if not post.approved_comments.count %}
+                <p>Sem comentarios :(</p>
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    <section class="novo-comentario">
+        <h4>Adicionar Comentario: </h4>
+        <form action="" method="POST" class="comment post-form"> {% csrf_token %}
+            {{form.as_table}}
+            <button type="submit" class="button-enviar">Send</button>
+        </form>
+    </section>
+
+{% endblock %}

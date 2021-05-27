@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+</head>
+<body>
+    <div class="background">
+        <header class="center">
+            <div class="logo">
+                <h1 class="logo-text"><a href="{%url 'post_list' %}">Blog</a></h1>
+            </div>
+            <nav>
+                {% if user.is_authenticated %}
+                    <p>Olá, {{user.username}}</p>
+                    {% block button %}
+                    
+                    {% endblock %}
+
+                    <div class="button bk-red">
+                        <a href="{% url 'logout' %}">Log out</a>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="button">Login</a> 
+                {% endif %}
+            </nav>
+        </header>
+    </div>
+
+    <div class="background">
+        <main class="center">
+            {% block conteudo %}
+
+            {% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>
